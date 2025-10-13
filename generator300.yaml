@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app.kubernetes.io/instance: git-source-1
+  name: alex-app-generator
+spec:
+  destination:
+    namespace: gitops-runtime
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    helm:
+      valuesObject:
+        clusters:
+          - devApp: 50
+            name: in-cluster
+            prodApp: 1
+        runtimeName: jup
+    path: arena-app-generator
+    repoURL: https://github.com/oleksandr-codefresh/argocd-example-apps
+    targetRevision: personal-eks
+  syncPolicy:
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true
